@@ -2,6 +2,7 @@ import time
 import random
 import math
 import numpy as np
+np.seterr(divide='ignore', invalid='ignore', all='ignore')
 import matplotlib.pyplot as plt
 
 #-----------------------------------
@@ -104,6 +105,9 @@ def golomb_simulated_annealing(size_variables,max_bound,
         initial_temperature,cooling_coeff,computing_time,
         trials_number,attempts_in_each_level_of_temperature):
 
+    # begin time
+    start = time.time()
+
     initial_solution = random_solution(size_variables,max_bound)
 
     current_solution = initial_solution
@@ -114,9 +118,8 @@ def golomb_simulated_annealing(size_variables,max_bound,
 
     best_fitness = objective_function(best_solution)
     current_temperature = initial_temperature # current temperature
-    record_best_fitness = []
+    #record_best_fitness = []
 
-    start = time.time()
 
     # stop by computing time
     while time.time()-start < computing_time:
@@ -127,7 +130,10 @@ def golomb_simulated_annealing(size_variables,max_bound,
             current_fitness = objective_function(current_solution)
             
             if current_fitness > best_fitness:
-                p = math.exp((best_fitness-current_fitness)/current_temperature)
+                try:
+                    p = math.exp((best_fitness-current_fitness)/current_temperature)
+                except:
+                    pass
                 r = random.random()
 
                 # make a decision to accept the worse solution or not
@@ -152,9 +158,17 @@ def golomb_simulated_annealing(size_variables,max_bound,
         # cooling the temperature
         current_temperature = current_temperature * cooling_coeff
 
+        # end time
+        end = time.time() - start
+
     # end While Loop
 
-   
-    return {"initial_solution" : initial_solution, "best_solution" : best_solution, "best_fitness" : best_fitness}  
+    
+    
+
+    return {"initial_solution" : initial_solution, 
+            "best_solution" : best_solution, 
+            "best_fitness" : best_fitness,
+            "runtime" : end}  
 
 
