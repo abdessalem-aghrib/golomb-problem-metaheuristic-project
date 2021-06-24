@@ -19,7 +19,7 @@ def evaluation_function(individual: list[int]):
 
 
 def binary_list_to_integer(binary_list: list[int]):
-    string_ints = [str(int) for i in binary_list]
+    string_ints = [str(i) for i in binary_list]
     binary_str = "".join(string_ints)
     return int(binary_str, 2)
 
@@ -155,7 +155,7 @@ def rank_selection(population: list[list[int]], marks_count: int, ranks: list[in
 
     index = size - 1
     for i in range(size):
-        if probabilities[i] >= p:
+        if p >= probabilities[i]:
             index = i
             break
 
