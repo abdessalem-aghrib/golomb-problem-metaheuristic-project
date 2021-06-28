@@ -27,7 +27,7 @@ def binary_list_to_integer(binary_list: list[int]):
 def integer_to_binary_list(integer: int, size_of_bits: int):
     b = str(format(integer, 'b'))
     l = len(b)
-    if l >= size_of_bits:
+    if l > size_of_bits:
         return b
 
     binary = str("0" * (size_of_bits - l)) + b
@@ -102,7 +102,7 @@ def mutation(individual: list[int], size_of_bits: int, max_trying_time_for_corre
 
     # correct the individual
     individual = golomb.correct_golomb_ruler(individual, original_ruler=original_individual,
-                                        max_trying_time=max_trying_time_for_correct_ruler)
+                                             max_trying_time=max_trying_time_for_correct_ruler)
 
     return individual
 
@@ -145,7 +145,7 @@ def rank_selection(population: list[list[int]], marks_count: int, ranks: list[in
     parent_1 = []
     parent_2 = []
 
-    print(f'in rank_selection : \n{population}')
+    # print(f'in rank_selection : \n{population}')
 
     # select first parent
     size = len(probabilities)
@@ -194,7 +194,7 @@ def rank_selection(population: list[list[int]], marks_count: int, ranks: list[in
 
 
 def tournament_selection(population: list[list[int]], population_size: int, marks_count: int):
-    print(f'in tournament_selection : \n{population}')
+    # print(f'in tournament_selection : \n{population}')
 
     k = random.randint(2, population_size)
 
@@ -216,7 +216,7 @@ def tournament_selection(population: list[list[int]], population_size: int, mark
 def uniform_selection(population: list[list[int]], population_size: int):
     individuals_index = random.sample(range(0, population_size), 2)
 
-    print(f'in uniform_selection : \n{population}')
+    # print(f'in uniform_selection : \n{population}')
 
     return [population[individuals_index[0]], population[individuals_index[1]]]
 
@@ -231,7 +231,7 @@ def get_best_individual(population: list[list[int]]):
 
 
 def genetic(population_size: int, generation_count: int, crossing_probability: float, mutation_probability: float,
-            marks_count: int, max_bound: int,size_of_bits: int,
+            marks_count: int, max_bound: int, size_of_bits: int,
             max_trying_time_for_correct_ruler: float):
     start = time.time()
     record_best_individuals_from_all_generations = []
@@ -239,7 +239,6 @@ def genetic(population_size: int, generation_count: int, crossing_probability: f
     population = generate_population(population_size, marks_count, max_bound)
     record_best_individuals_from_all_generations.append(get_best_individual(population))
     print(f'Initial Population : \n{population}')
-    print(f'{[golomb.is_golomb_ruler(b) for b in population]}\n\n\n')
 
     initial_population = population.copy()
     gen = 0
@@ -264,13 +263,11 @@ def genetic(population_size: int, generation_count: int, crossing_probability: f
 
             # choose selection methode
             parents = list()
-            r = random.randint(0, 2)
-            if r == 0:
+            r = random.random()
+            if r >= 0.5:
                 parents = rank_selection(population, marks_count, ranks, probabilities)
-            elif r == 1:
+            else:
                 parents = tournament_selection(population, population_size, marks_count)
-            elif r == 2:
-                parents = uniform_selection(population, population_size)
 
             parent_1 = parents[0].copy()
             parent_2 = parents[1].copy()
@@ -298,8 +295,7 @@ def genetic(population_size: int, generation_count: int, crossing_probability: f
         population.clear()
         population = new_pop.copy()
         record_best_individuals_from_all_generations.append(get_best_individual(population))
-        print(f'\n\nGeneration {gen} :: \n{new_pop}')
-        print(f'{[golomb.is_golomb_ruler(b) for b in population]}\n\n\n')
+        print(f'\n\nGeneration {gen} :: \n{new_pop}\nBest ruler in it : {get_best_individual(new_pop)}')
 
     end = time.time() - start
     best_individual = get_best_individual(record_best_individuals_from_all_generations)
