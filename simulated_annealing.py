@@ -44,7 +44,7 @@ def simulated_annealing(marks_count: int, max_bound: int,
 
     current_ruler = initial_ruler
     best_ruler = initial_ruler
-    beset_ruler_saved = initial_ruler.copy()
+    best_ruler_saved = initial_ruler.copy()
 
     n = 1  # number of accepted rulers
     i = 1  # iteration number
@@ -79,7 +79,8 @@ def simulated_annealing(marks_count: int, max_bound: int,
                     accept = False  # this worse ruler is not accepted
             else:
                 accept = True  # accept better ruler
-                beset_ruler_saved = current_ruler.copy()
+                if objective_function(best_ruler_saved) > current_fitness:
+                    best_ruler_saved = current_ruler.copy()
 
             if accept:
                 best_ruler = current_ruler  # update the best ruler
@@ -101,6 +102,6 @@ def simulated_annealing(marks_count: int, max_bound: int,
     # end While Loop
 
     return {"initial_ruler": initial_ruler,
-            "best_ruler": beset_ruler_saved,
-            "best_fitness": beset_ruler_saved[len(beset_ruler_saved)-1],
+            "best_ruler": best_ruler_saved,
+            "best_fitness": best_ruler_saved[len(best_ruler_saved)-1],
             "runtime": end}
