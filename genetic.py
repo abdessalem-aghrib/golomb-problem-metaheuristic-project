@@ -274,13 +274,13 @@ def genetic(population_size: int, generation_count: int, crossing_probability: f
 
             # crossover
             r = random.random()
-            if r >= crossing_probability:
+            if r <= crossing_probability:
                 parents = crossover(parent_1.copy(), parent_2.copy(), size_of_bits,
                                     max_trying_time_for_correct_ruler)
 
             # mutation
             r = random.random()
-            if r >= mutation_probability:
+            if r <= mutation_probability:
                 parent_1 = mutation(parents[0].copy(), size_of_bits, max_trying_time_for_correct_ruler)
                 parent_2 = mutation(parents[1].copy(), size_of_bits, max_trying_time_for_correct_ruler)
 
